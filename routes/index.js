@@ -1,9 +1,29 @@
-var express = require('express');
-var router = express.Router();
+module.exports = function (app) {
+    app.get('/',function(req,res){
+        res.render('index',{title:'首页'});
+    })
+    //注册页面
+    app.get('/reg',function (req,res) {
+        res.render('reg',{title:'注册页面'})
+    })
+    //登录页面
+    app.get('/login',function (req,res) {
+        res.render('login',{title:'登录页面'})
+    })
+    //登录行为
+    app.post('/login',function (req,res) {
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+    })
+    //发表页面
+    app.get('/post',function (req,res) {
+        res.render('post',{title:'发表页面'})
+    })
+    //发表行为
+    app.post('/post',function (req,res) {
 
-module.exports = router;
+    })
+    //退出登录
+    app.get('/logout',function (req,res) {
+
+    })
+}
