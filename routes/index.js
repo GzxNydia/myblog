@@ -1,7 +1,8 @@
 
 //引入users集合操作方法
 var User = require('../model/User');
-var Post = require('../model/post');
+//引入Post集合操作方法
+var Post = require('../model/Post');
 //未登录情况下不允许访问登录和注册
 function checkLogin(req,res,next) {
     if (!req.session.user) {
@@ -22,12 +23,21 @@ function checkNotLogin(req,res,next) {
 var crypto = require('crypto')
 module.exports = function (app) {
     app.get('/',function(req,res){
-        res.render('index',{
-            title:'首页',
-            user:req.session.user,
-            success:req.flash('success').toString(),
-            error:req.flash('error').toString()
-        });
+
+        Post.get(null,function (err,docs) {
+            if(err){
+                req.flash('error',err);
+                return res.redirect('/')
+            }
+            res.render('index',{
+                title:'首页',
+                user:req.session.user,
+                success:req.flash('success').toString(),
+                error:req.flash('error').toString(),
+                docs:docs
+            });
+
+        })
     })
     //注册页面
     app.get('/reg',checkNotLogin,function (req,res) {
@@ -134,7 +144,17 @@ module.exports = function (app) {
     })
     //发表行为
     app.post('/post',function (req,res) {
-
+        //获取用户名
+        var currentName = req.session.user;
+        var newPost = new Post(currentName.username,req.body.title,req.body.content);
+        newPost.save(function (err) {
+            if(err){
+                req.flash('err',err);
+                return res.redirect('/');
+            }
+            req.flash('success','发布成功');
+            return res.redirect('/');
+        })
     })
     //退出登录
     app.get('/logout',checkLogin,function (req,res) {
