@@ -1,4 +1,6 @@
 var mongodb = require('./db');
+//引入markdown
+var markdown = require('markdown').markdown;
 function Post(name,title,content) {
     this.name = name;
     this.title = title;
@@ -67,6 +69,10 @@ Post.get = function (name,callback) {
                 if(err){
                     return callback(err);
                 }
+                //将每篇文章在读取的时候以Markdown的格式进行解析
+                docs.forEach(function (doc) {
+                    doc.content = markdown.toHTML(doc.content);
+                })
                 return callback(null,docs);
             })
         })

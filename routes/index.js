@@ -20,7 +20,18 @@ function checkNotLogin(req,res,next) {
     next();
 }
 //引入一个加密插件
-var crypto = require('crypto')
+var crypto = require('crypto');
+//引入上传的插件
+var multer = require('multer');
+var storage = multer.diskStorage({
+    destination:function (req,file,cb) {
+        cb(null,'./public/images');
+    },
+    filename:function (req,file,cb) {
+        cb(null,file.originalname);
+    }
+})
+var upload = multer({storage:storage});
 module.exports = function (app) {
     app.get('/',function(req,res){
 
@@ -155,6 +166,20 @@ module.exports = function (app) {
             req.flash('success','发布成功');
             return res.redirect('/');
         })
+    })
+    //上传页面
+    app.get('/upload',checkLogin,function (req,res) {
+        res.render('upload',{
+            title:'文件上传',
+            user:req.session.user,
+            success:req.flash('success').toString(),
+            error:req.flash('error').toString()
+        })
+    })
+    //上传行为
+    app.post('/upload',upload.array('filename',5),function (req,res) {
+        req.flash('success','文件上传成功');
+        res.redirect('/upload');
     })
     //退出登录
     app.get('/logout',checkLogin,function (req,res) {
