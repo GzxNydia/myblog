@@ -35,7 +35,7 @@ var upload = multer({storage:storage});
 module.exports = function (app) {
     app.get('/',function(req,res){
 
-        Post.get(null,function (err,docs) {
+        Post.getAll(null,function (err,docs) {
             if(err){
                 req.flash('error',err);
                 return res.redirect('/')
@@ -180,6 +180,47 @@ module.exports = function (app) {
     app.post('/upload',upload.array('filename',5),function (req,res) {
         req.flash('success','文件上传成功');
         res.redirect('/upload');
+    })
+    //用户页面
+    app.get('/u/:name',function (req,res) {
+        User.get(req.params.name,function (err,user) {
+            if(!user){
+                req.flash('error','查询的用户不存在');
+                return res.redirect('/');
+            }
+            //查询该用户的所有文章
+            Post.getAll(user.username,function (err,docs) {
+                if(err){
+                    req.flash('error',err);
+                    return res.redirect('/');
+                }
+                return res.render('user',{
+                    title:'用户文章列表',
+                    user:req.session.user,
+                    success:req.flash('success').toString(),
+                    error:req.flash('error').toString(),
+                    docs:docs
+
+                })
+            })
+        })
+    })
+    //文章页面
+    app.get('/u/:name/:title/:time',function (req,res) {
+        Post.getOne(req.params.name,req.params.title,req.params.time,function (err,doc) {
+            if(err){
+                req.flash('error',err);
+                return res.redirect('/');
+            }
+            return res.render('article',{
+                title:'文章详情页面',
+                user:req.session.user,
+                success:req.flash('success').toString(),
+                error:req.flash('error').toString(),
+                doc:doc
+
+            })
+        })
     })
     //退出登录
     app.get('/logout',checkLogin,function (req,res) {

@@ -48,7 +48,7 @@ Post.prototype.save = function (callback) {
 
 
 }
-Post.get = function (name,callback) {
+Post.getAll = function (name,callback) {
     mongodb.open(function (err,db) {
         if(err){
             return callback(err);
@@ -74,6 +74,32 @@ Post.get = function (name,callback) {
                     doc.content = markdown.toHTML(doc.content);
                 })
                 return callback(null,docs);
+            })
+        })
+    })
+}
+//获取一篇文章
+Post.getOne = function (name,title,time,callback) {
+    mongodb.open(function (err,db) {
+        if(err){
+            return callback(err);
+        }
+        db.collection('posts',function (err,collection) {
+            if(err){
+                mongodb.close();
+                return callback(err);
+            }
+            collection.findOne({
+                name:name,
+                title:title,
+                time:time
+            },function (err,doc) {
+                mongodb.close();
+                if(err){
+                    return callback(err);
+                }
+                doc.content = markdown.toHTML(doc.content);
+                return callback(null,doc);
             })
         })
     })
