@@ -1,0 +1,17 @@
+
+<% doc.comments.forEach(function (comment) { %>
+<p>
+    <%= comment.c_name %>
+    <span class="info">日期:<%= comment.c_time %></span>
+</p>
+<p>
+    <%- comment.c_content %>
+</p>
+<% }) %>
+<% if(user) { %>
+<form action="/comment/<%= doc.name %>/<%= doc.title %>/<%= doc.time %>" method="post">
+    发布人：<%= user.username %>
+    <textarea name="c_content" cols="80" rows="5"></textarea>
+    <input type="submit" value="提交">
+</form>
+<% } %>

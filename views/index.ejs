@@ -3,10 +3,17 @@
 <p><h2><a href="/u/<%= doc.name %>/<%= doc.title %>/<%= doc.time%>"><%= doc.title %></a></h2></p>
 <p class="info">
     作者：<a href="/u/<%= doc.name %>"><%= doc.name %></a>
-    日期：<a href="#"><%= doc.time %></a>
+    日期：<a href="#"><%= doc.time %></a> |
+    标签：
+    <% doc.tags.forEach(function (tag) {  %>
+        <%if(tag){%>
+        <a class="tag" href="/tags/<%= tag %>"><%= tag %></a>
+        <% } %>
+    <%})%>
 </p>
 <p>
     <%- doc.content %>
 </p>
 <% }) %>
+<% include paging.ejs %>
 <% include footer.ejs %>

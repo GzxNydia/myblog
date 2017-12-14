@@ -1,0 +1,16 @@
+<% include header.ejs %>
+<ul class="archive">
+    <% var lastDay = 0 %>
+    <% docs.forEach(function (doc) {%>
+    <% if(lastDay != doc.time.split(' ')[0]){%>
+    <li><h2><%= doc.time.split(' ')[0] %></h2></li>
+    <% lastDay = doc.time.split(' ')[0] }%>
+    <li><time><%= doc.time.split(' ')[0] %></time></li>
+    <li>
+        <a href="/u/<%= doc.name %>/<%= doc.title %>/<%= doc.time %>">
+            <%= doc.title %>
+        </a>
+    </li>
+    <% }) %>
+</ul>
+<% include footer.ejs %>

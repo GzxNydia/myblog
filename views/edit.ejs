@@ -1,0 +1,9 @@
+<%- include header.ejs %>
+<form action="/edit/<%= doc.name %>/<%= doc.title %>/<%= doc.time %>" method="post">
+    标题：<br>
+    <input type="text" name="title" value="<%= doc.title %>" disabled><br>
+    内容：<br>
+    <textarea name="content" cols="100" rows="20"><%- doc.content %></textarea><br>
+    <input type="submit" value="修改">
+</form>
+<%- include footer.ejs%>
